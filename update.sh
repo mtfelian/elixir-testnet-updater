@@ -10,18 +10,20 @@ GOOS=linux go build
 
 update() {
   local server=$1
-  local path=$2
-  echo ">>> Updating server $server:$path"
-  ssh -i $identity $server "service elixir-updater stop"
-  scp -i $identity $binaryName $server:$path/$binaryName
-  scp -i $identity $configName $server:$path/$configName
-  ssh -i $identity $server "service elixir-updater start"
+  local port=$2
+  local path=$3
+  echo ">>> Updating server $server:$path, SSH port $port"
+  ssh -p $port -i $identity $server "service elixir-updater stop"
+  scp -P $port -i $identity $binaryName $server:$path/$binaryName
+  scp -P $port -i $identity $configName $server:$path/$configName
+  ssh -p $port -i $identity $server "service elixir-updater start"
 }
 
 
 for (( j=0; j<"${#servers[@]}"; j++ )); do
     server=${servers[$j]}
+    port=${ports[$j]}
     path=${paths[$j]}
-    update "$server" "$path"
+    update "$server" "$port" "$path"
 done
 
