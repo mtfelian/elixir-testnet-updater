@@ -1,0 +1,11 @@
+tg_bot_token: "your TG bot key"
+tg_force_chat_id: 123
+
+user: "root"
+container_name: "elixir"
+restart_policy: "unless-stopped"
+env_file_path: "/opt/elixir/validator.env"
+service_name: "elixir-updater"
+host: "http://localhost"
+port: "17690"
+docker_api_version: "1.42"
