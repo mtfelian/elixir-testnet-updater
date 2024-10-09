@@ -9,7 +9,8 @@ Validator node.
 - Follow the instruction at https://docs.elixir.xyz/running-an-elixir-validator up to 'Running Your Validator' point.
   Don't do commands 'docker pull' and 'docker start'. At this point you should have prepared `validator.env` file
   containing all necessary values.
-- If you need TG Bot notifications, create your Telegram Bot for this. Use https://t.me/BotFather
+- If you need TG Bot notifications, create your Telegram Bot for this. Use https://t.me/BotFather. The token it will
+  give to you should be used in `config.yml` in next step. 
 - Prepare configuration file `config.yml` for this tool. See example at `config.example.yml`. Explanation of options  
   written below.
 - Install Golang compiler v1.22 or greater. Seek here: https://go.dev/dl/
@@ -18,12 +19,19 @@ Validator node.
   Go modules.
 - Deploy the compiled binary.
 
+After tool will started, just wait and explore logs. Commands like: 
+
+- `journalctl -u elixir-updater -n 100 -f` for systemd service log,
+- `docker logs -n 100 -f $(docker ps | grep elixir | awk '{print $1}')` for Elixir container logs
+
+After starting the tool, write something like `/start` to your created TG bot in Telegram. 
+
 ## config.yml options
 
 | option             | type   | default value               | meaning                                               |
 |--------------------|--------|-----------------------------|-------------------------------------------------------|
 | tg_bot_token       | string | ""                          | TG Bot Token                                          |
-| tg_force_chat_id   | int64  | 0                           | Forces Chat ID to this value, if known                |
+| tg_force_chat_id   | int64  | 0                           | Forces Chat ID to this value, if known. Leave zero    |
 | user               | string | "root"                      | User to run service under                             |
 | container_name     | string | "elixir"                    | Docker container name to create                       |
 | restart_policy     | string | "unless-stopped"            | Docker container restart policy                       |
