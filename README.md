@@ -3,6 +3,12 @@
 This program registers itself as a `systemd` service and periodically updates docker container with Elixir Testnet v3
 Validator node.
 
+## WARNING
+
+THIS SOFTWARE IS PROVIDED AS IS. USE AT YOUR OWN RISK.
+
+AUTHOR DOES NOT HAVE ANY RESPONSIBILITY FOR YOUR ACTIONS WITH IT.
+
 ## Steps to install:
 
 - Prepare your VPS or other kind of server.
@@ -10,21 +16,21 @@ Validator node.
   Don't do commands 'docker pull' and 'docker start'. At this point you should have prepared `validator.env` file
   containing all necessary values.
 - If you need TG Bot notifications, create your Telegram Bot for this. Use https://t.me/BotFather. The token it will
-  give to you should be used in `config.yml` in next step. 
-- Prepare configuration file `config.yml` for this tool. See example at `config.example.yml`. Explanation of options  
+  give to you should be used in `config.yml` in next step.
+- Prepare configuration file `config.yml` for this tool. See example in `config.example.yml`. Explanation of options  
   written below.
-- Install Golang compiler v1.22 or greater. Seek here: https://go.dev/dl/
+- Install Golang compiler v1.22 or higher. Seek here: https://go.dev/dl/
 - Prepare `config.sh` if you will deploy to VPS via script. Example is in `config.example.sh`.
-- Compile this tool. You may use `go build` command or look into `update.sh` script. Use `go mod tidy` if problems with
-  Go modules.
+- Compile this tool. You may use `go build` command or look into `update.sh` script. Try `go mod tidy` if you will
+  encounter problems with Go modules.
 - Deploy the compiled binary.
 
-After tool will started, just wait and explore logs. Commands like: 
+After tool will started, just wait and explore logs. Commands like:
 
 - `journalctl -u elixir-updater -n 100 -f` for systemd service log,
 - `docker logs -n 100 -f $(docker ps | grep elixir | awk '{print $1}')` for Elixir container logs
 
-After starting the tool, write something like `/start` to your created TG bot in Telegram. 
+After starting the tool, write something like `/start` to your created TG bot in Telegram.
 
 ## config.yml options
 

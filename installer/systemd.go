@@ -50,7 +50,6 @@ ExecStart={{.ExecStart}}
 Restart=always
 User={{.User}}
 WorkingDirectory={{.WorkingDirectory}}
-Environment=DOCKER_API_VERSION=1.43
 StandardOutput=syslog
 StandardError=syslog
 
