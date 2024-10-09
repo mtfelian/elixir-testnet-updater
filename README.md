@@ -52,7 +52,7 @@ After starting the tool, write something like `/start` to your created TG bot in
 | variable | type            | meaning                                                       |
 |----------|-----------------|---------------------------------------------------------------|
 | servers  | array of string | Server addr to connect via SSH, format: username@host         |
-| paths    | array of string | Paths to copy this tool binary, order must be same as servers |
 | ports    | array of string | SSH ports in the same order                                   |
+| paths    | array of string | Paths to copy this tool binary, order must be same as servers |
 
 Enjoy.
