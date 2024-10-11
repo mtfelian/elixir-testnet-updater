@@ -25,7 +25,7 @@ AUTHOR DOES NOT HAVE ANY RESPONSIBILITY FOR YOUR ACTIONS WITH IT.
   encounter problems with Go modules.
 - Deploy the compiled binary.
 
-After tool will started, just wait and explore logs. Commands like:
+After tool will start, just wait and explore logs. Commands like:
 
 - `journalctl -u elixir-updater -n 100 -f` for systemd service log,
 - `docker logs -n 100 -f $(docker ps | grep elixir | awk '{print $1}')` for Elixir container logs
