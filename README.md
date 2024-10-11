@@ -30,7 +30,7 @@ After tool will start, just wait and explore logs. Commands like:
 - `journalctl -u elixir-updater -n 100 -f` for systemd service log,
 - `docker logs -n 100 -f $(docker ps | grep elixir | awk '{print $1}')` for Elixir container logs
 
-After starting the tool, write something like `/start` to your created TG bot in Telegram.
+If you provided TG bot key, having this tool online, write something like `/start` to your created TG bot in Telegram.
 
 ## config.yml options
 
