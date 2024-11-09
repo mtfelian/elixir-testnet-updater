@@ -14,7 +14,7 @@ import (
 	"github.com/mtfelian/elixir-testnet-updater/notifier"
 )
 
-const imageName = "elixirprotocol/validator:v3" // Replace with your image name
+const imageName = "elixirprotocol/validator" // Replace with your image name
 
 // DockerClientParams represents docker client parameters
 type DockerClientParams struct {
