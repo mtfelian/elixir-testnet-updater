@@ -159,7 +159,7 @@ func (dc *DockerClient) getImageID(ctx context.Context) (string, error) {
 	// Find the image by name and get its ID
 	for _, img := range images {
 		for _, tag := range img.RepoTags {
-			fmt.Println(">>>", tag)
+			fmt.Printf(">> found image %q, our image is %q\n", tag, dc.imageName)
 			if tag == dc.imageName {
 				return img.ID, nil
 			}
@@ -198,7 +198,7 @@ func (dc *DockerClient) updateContainer(ctx context.Context) {
 	}
 	fmt.Println("Starting a new container with the updated image...")
 	resp, err := dc.cli.ContainerCreate(ctx, &container.Config{
-		Image: dc.ImageName,
+		Image: dc.imageName,
 		Env:   dc.envVars,
 		ExposedPorts: nat.PortSet{
 			natPort: struct{}{},
