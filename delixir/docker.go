@@ -112,7 +112,8 @@ func (dc *DockerClient) CheckAndUpdateContainer(ctx context.Context) {
 	if currentContainerData.ImageID != newImageID {
 		fmt.Println("New image found, updating container...")
 		dc.updateContainer(ctx)
-		dc.notifier.SendBroadcastMessage(fmt.Sprintf("updated image from %q to %q", currentContainerData, newImageID))
+		dc.notifier.SendBroadcastMessage(fmt.Sprintf("updated image from %q to %q",
+			currentContainerData.ImageID, newImageID))
 	} else { // currentContainerData.ImageID != newImageID
 		fmt.Println("Container is already up to date.")
 		fmt.Printf("Current container status is %q. Restarting it\n", currentContainerData.State)
