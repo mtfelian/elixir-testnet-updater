@@ -34,18 +34,19 @@ If you provided TG bot key, having this tool online, write something like `/star
 
 ## config.yml options
 
-| option             | type   | default value               | meaning                                               |
-|--------------------|--------|-----------------------------|-------------------------------------------------------|
-| tg_bot_token       | string | ""                          | TG Bot Token                                          |
-| tg_force_chat_id   | int64  | 0                           | Forces Chat ID to this value, if known. Leave zero    |
-| user               | string | "root"                      | User to run service under                             |
-| container_name     | string | "elixir"                    | Docker container name to create                       |
-| restart_policy     | string | "unless-stopped"            | Docker container restart policy                       |
-| env_file_path      | string | "/opt/elixir/validator.env" | Path to env file for the Docker container             |
-| service_name       | string | "elixir-updater"            | Systemd service name                                  |
-| host               | string | "http://localhost"          | Path to retrieve metrics over HTTP from the container |
-| port               | string | "17690"                     | Port to retrieve metrics over HTTP from the container |
-| docker_api_version | string | "1.42"                      | Max supported Docker API version                      |
+| option             | type   | default value                     | meaning                                               |
+|--------------------|--------|-----------------------------------|-------------------------------------------------------|
+| tg_bot_token       | string | ""                                | TG Bot Token                                          |
+| tg_force_chat_id   | int64  | 0                                 | Forces Chat ID to this value, if known. Leave zero    |
+| user               | string | "root"                            | User to run service under                             |
+| container_name     | string | "elixir"                          | Docker container name to create                       |
+| restart_policy     | string | "unless-stopped"                  | Docker container restart policy                       |
+| env_file_path      | string | "/opt/elixir/validator.env"       | Path to env file for the Docker container             |
+| service_name       | string | "elixir-updater"                  | Systemd service name                                  |
+| host               | string | "http://localhost"                | Path to retrieve metrics over HTTP from the container |
+| port               | string | "17690"                           | Port to retrieve metrics over HTTP from the container |
+| docker_api_version | string | "1.42"                            | Max supported Docker API version                      |
+| image_name         | string | "elixirprotocol/validator:latest" | Docker Image name of Elixir validator                 |
 
 ## config.sh vars
 
