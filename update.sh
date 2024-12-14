@@ -13,7 +13,7 @@ update() {
   local port=$2
   local path=$3
   local tag=$4
-  echo ">>> Updating server $server:$path, SSH port $port"
+  echo ">>> Updating server $server:$path, SSH port $port, tag is $tag"
   ssh -p $port -i $identity $server "service elixir-updater stop"
   scp -P $port -i $identity $binaryName $server:$path/$binaryName
   sed -E -i 's/elixirprotocol\/validator:[a-z]+/elixirprotocol\/validator:'$tag'/g' $configName
