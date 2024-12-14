@@ -31,6 +31,7 @@ type Params struct {
 	Port             string
 	DockerAPIVersion string
 	MetricsURI       string
+	ImageName        string
 }
 
 // New initializes new service instance
@@ -66,6 +67,7 @@ func New(ctx context.Context, p Params) *Service {
 		ContainerName: p.ContainerName,
 		Port:          p.Port,
 		RestartPolicy: p.RestartPolicy,
+		ImageName:     p.ImageName,
 	}); err != nil {
 		log.Fatalf("Failed to create Docker DockerClient: %v", err)
 	}

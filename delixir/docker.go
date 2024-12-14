@@ -14,8 +14,6 @@ import (
 	"github.com/mtfelian/elixir-testnet-updater/notifier"
 )
 
-const imageName = "elixirprotocol/validator" // Replace with your image name
-
 // DockerClientParams represents docker client parameters
 type DockerClientParams struct {
 	EnvVars       []string
@@ -24,6 +22,7 @@ type DockerClientParams struct {
 	ContainerName string
 	Port          string
 	RestartPolicy string
+	ImageName     string
 }
 
 // NewDockerClient creates new Docker client
@@ -39,6 +38,7 @@ func NewDockerClient(p DockerClientParams) (*DockerClient, error) {
 		containerName: p.ContainerName,
 		port:          p.Port,
 		restartPolicy: p.RestartPolicy,
+		imageName:     p.ImageName,
 	}, nil
 }
 
@@ -50,10 +50,11 @@ type DockerClient struct {
 	containerName string
 	port          string
 	restartPolicy string
+	imageName     string
 }
 
 func (dc *DockerClient) pullLatestImage(ctx context.Context) error {
-	reader, err := dc.cli.ImagePull(ctx, imageName, image.PullOptions{Platform: "linux/amd64"})
+	reader, err := dc.cli.ImagePull(ctx, dc.imageName, image.PullOptions{Platform: "linux/amd64"})
 	if err != nil {
 		return err
 	}
@@ -159,13 +160,13 @@ func (dc *DockerClient) getImageID(ctx context.Context) (string, error) {
 	for _, img := range images {
 		for _, tag := range img.RepoTags {
 			fmt.Println(">>>", tag)
-			if tag == imageName {
+			if tag == dc.imageName {
 				return img.ID, nil
 			}
 		}
 	}
 
-	return "", fmt.Errorf("image %s not found", imageName)
+	return "", fmt.Errorf("image %s not found", dc.imageName)
 }
 
 func (dc *DockerClient) updateContainer(ctx context.Context) {
@@ -197,7 +198,7 @@ func (dc *DockerClient) updateContainer(ctx context.Context) {
 	}
 	fmt.Println("Starting a new container with the updated image...")
 	resp, err := dc.cli.ContainerCreate(ctx, &container.Config{
-		Image: imageName,
+		Image: dc.ImageName,
 		Env:   dc.envVars,
 		ExposedPorts: nat.PortSet{
 			natPort: struct{}{},

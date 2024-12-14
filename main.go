@@ -39,6 +39,7 @@ func initialize() *service.Service {
 		ServiceName:      cfg.ServiceName,
 		Port:             cfg.Port,
 		DockerAPIVersion: cfg.DockerAPIVersion,
+		ImageName:        cfg.ImageName,
 		MetricsURI:       fmt.Sprintf("%s:%s", cfg.Host, cfg.Port),
 	}
 

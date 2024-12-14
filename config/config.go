@@ -19,6 +19,7 @@ const (
 	defaultHost             = "http://localhost"
 	defaultPort             = "17690"
 	defaultDockerAPIVersion = "1.42"
+	defaultImageName        = "elixirprotocol/validator:latest"
 )
 
 // Config represents app configuration
@@ -34,6 +35,7 @@ type Config struct {
 	Host             string `yaml:"host"`
 	Port             string `yaml:"port"`
 	DockerAPIVersion string `yaml:"docker_api_version"`
+	ImageName        string `yaml:"image_name"`
 }
 
 // SetDefaults to the config
@@ -71,6 +73,9 @@ func (c *Config) SetDefaults() {
 	}
 	if c.DockerAPIVersion == "" {
 		c.DockerAPIVersion = defaultDockerAPIVersion
+	}
+	if c.ImageName == "" {
+		c.ImageName = defaultImageName
 	}
 }
 
