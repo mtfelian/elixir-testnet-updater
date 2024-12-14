@@ -14,6 +14,10 @@ import (
 	"github.com/mtfelian/elixir-testnet-updater/notifier"
 )
 
+const (
+	containerStateExited = "exited"
+)
+
 // DockerClientParams represents docker client parameters
 type DockerClientParams struct {
 	EnvVars       []string
@@ -88,7 +92,7 @@ func (dc *DockerClient) pullLatestImage(ctx context.Context) error {
 
 // CheckAndUpdateContainer image
 func (dc *DockerClient) CheckAndUpdateContainer(ctx context.Context) {
-	currentImageID, err := dc.getCurrentImageID(ctx)
+	currentContainerData, err := dc.getCurrentContainerData(ctx)
 	if err != nil {
 		log.Printf("Error getting current image ID: %v", err)
 	}
@@ -105,12 +109,19 @@ func (dc *DockerClient) CheckAndUpdateContainer(ctx context.Context) {
 		return
 	}
 
-	if currentImageID != newImageID {
+	if currentContainerData.ImageID != newImageID {
 		fmt.Println("New image found, updating container...")
 		dc.updateContainer(ctx)
-		dc.notifier.SendBroadcastMessage(fmt.Sprintf("updated image from %q to %q", currentImageID, newImageID))
-	} else {
+		dc.notifier.SendBroadcastMessage(fmt.Sprintf("updated image from %q to %q", currentContainerData, newImageID))
+	} else { // currentContainerData.ImageID != newImageID
 		fmt.Println("Container is already up to date.")
+		fmt.Printf("Current container status is %q. Restarting it\n", currentContainerData.State)
+		if currentContainerData.State == containerStateExited {
+			if err := dc.containerStart(ctx, currentContainerData.ContainerID); err != nil {
+				log.Printf("attempted to start container %q after stopping attempt, error: %v",
+					currentContainerData.ContainerID, err)
+			}
+		}
 		//dc.notifier.SendBroadcastMessage("image is up-to-date")
 	}
 }
@@ -133,21 +144,50 @@ func (dc *DockerClient) containerExists(ctx context.Context) (string, error) {
 	return "", nil
 }
 
-func (dc *DockerClient) getCurrentImageID(ctx context.Context) (string, error) {
+// ContainerData represents container data
+type ContainerData struct {
+	ContainerID string
+	ImageID     string
+	State       string
+}
+
+func (dc *DockerClient) getCurrentContainerData(ctx context.Context) (ContainerData, error) {
 	containers, err := dc.cli.ContainerList(ctx, container.ListOptions{All: true})
 	if err != nil {
-		return "", err
+		return ContainerData{}, err
 	}
 
 	for _, cont := range containers {
 		for _, name := range cont.Names {
 			if name == "/"+dc.containerName {
-				return cont.ImageID, nil
+				return ContainerData{
+					ContainerID: cont.ID,
+					ImageID:     cont.ImageID,
+					State:       cont.State,
+				}, nil
 			}
 		}
 	}
 
-	return "", fmt.Errorf("container %s not found", dc.containerName)
+	return ContainerData{}, fmt.Errorf("container %s not found", dc.containerName)
+}
+
+func (dc *DockerClient) containerStop(ctx context.Context, containerID string) error {
+	fmt.Println("Stopping the container...")
+	if err := dc.cli.ContainerStop(ctx, containerID, container.StopOptions{}); err != nil {
+		log.Printf("Error stopping container: %v", err)
+		return err
+	}
+	return nil
+}
+
+func (dc *DockerClient) containerStart(ctx context.Context, containerID string) error {
+	fmt.Println("Starting the container...")
+	if err := dc.cli.ContainerStart(ctx, containerID, container.StartOptions{}); err != nil {
+		log.Printf("Error starting container: %v", err)
+		return err
+	}
+	return nil
 }
 
 func (dc *DockerClient) getImageID(ctx context.Context) (string, error) {
@@ -178,9 +218,7 @@ func (dc *DockerClient) updateContainer(ctx context.Context) {
 	}
 
 	if containerID != "" {
-		fmt.Println("Stopping the container...")
-		if err := dc.cli.ContainerStop(ctx, containerID, container.StopOptions{}); err != nil {
-			log.Printf("Error stopping container: %v", err)
+		if err := dc.containerStop(ctx, containerID); err != nil {
 			return
 		}
 
@@ -221,8 +259,7 @@ func (dc *DockerClient) updateContainer(ctx context.Context) {
 		return
 	}
 
-	if err := dc.cli.ContainerStart(ctx, resp.ID, container.StartOptions{}); err != nil {
-		log.Printf("Error starting container: %v", err)
+	if err := dc.containerStart(ctx, resp.ID); err != nil {
 		return
 	}
 
