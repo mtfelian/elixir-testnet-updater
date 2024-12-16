@@ -12,3 +12,7 @@ paths=(
   "/root"
   "/opt/elixir"
 )
+tags=(
+  "latest"
+  "testnet"
+)
